@@ -1,0 +1,20 @@
+﻿@model MvcSportStore.ViewModels.ProductModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+@if (Model != null && Model.Products.Count() > 0)
+{
+    @foreach (var product in Model.Products)
+    {
+        <partial name="ProductSummary" model="product" />
+    }
+    <br />
+    <page-link paging-info="@Model.PagingInfo"></page-link>
+    @* <br />
+    for(int i=1;i<=Model.PagingInfo.TotalPages;i++)
+    {
+        <span style="float:left;width:50px">
+            <a class="btn border border-secondary m-1" asp-controller="Home" asp-action="Index" asp-route-id="@i">@i</a>
+        </span>
+    } *@
+  }
