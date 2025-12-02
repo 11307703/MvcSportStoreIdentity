@@ -1,3 +1,17 @@
-﻿<a class="btn border border-secondary m-1 text-white" asp-controller="Account" asp-action="Register">SportStore - Register</a>
-<a class="btn border border-secondary m-1 text-white" asp-controller="Account" asp-action="Login">SportStore - Login</a>
-<a class="btn border border-secondary m-1 text-white" asp-controller="Account" asp-action="Logout">SportStore - Logout</a>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> _userManager;
+@inject SignInManager<IdentityUser> _signInManager;
+
+
+
+@if(_signInManager.IsSignedIn(User))
+{
+	<a class="btn border border-secondary m-1 text-white" asp-controller="Account" asp-action="Logout">SportStore - Logout</a>
+
+}
+else
+{
+	<a class="btn border border-secondary m-1 text-white" asp-controller="Account" asp-action="Register">SportStore - Register</a>
+	<a class="btn border border-secondary m-1 text-white" asp-controller="Account" asp-action="Login">SportStore - Login</a>
+}
+

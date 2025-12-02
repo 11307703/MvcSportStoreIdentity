@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MvcSportStore.ViewModels.IdentityViewModels;
+using System.Threading.Tasks;
 
 namespace MvcSportStore.Controllers
 {
@@ -23,13 +24,21 @@ namespace MvcSportStore.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> LoginAsync(LoginViewModel model)
         {
             if(ModelState.IsValid)
             {
-                //DI - Service - SignInResult
-                return RedirectToAction("Index", "Home");
-
+                //DI - Service - SignInResult             
+                var user = await _userManager.FindByNameAsync(model.UserName);
+                if (user != null)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                ModelState.AddModelError("", "Problem signing in");
             }
             return View(model);
         }
@@ -38,7 +47,8 @@ namespace MvcSportStore.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            return View("Login");
+            _signInManager.SignOutAsync();
+            return RedirectToAction("Login");
         }
         #endregion
         #region Register
@@ -48,12 +58,25 @@ namespace MvcSportStore.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Register(RegisterViewModel model)
+        public async Task<IActionResult> RegisterAsync(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
                 //DI - Service - IdentityResult
-                return RedirectToAction("Index", "Home");
+                var user = new IdentityUser(model.UserName);
+                user.Email = model.Email;
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
             }
             return View(model);
         }

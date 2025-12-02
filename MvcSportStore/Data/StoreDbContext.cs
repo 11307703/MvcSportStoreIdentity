@@ -12,7 +12,6 @@ namespace MvcSportStore.Data
             
         }
         public DbSet<Product> Products { get; set; }
-        public DbSet<MvcSportStore.ViewModels.IdentityViewModels.LoginViewModel> LoginViewModel { get; set; } = default!;
-        public DbSet<MvcSportStore.ViewModels.IdentityViewModels.RegisterViewModel> RegisterViewModel { get; set; } = default!;
+
     }
 }

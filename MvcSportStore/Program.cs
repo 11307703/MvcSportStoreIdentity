@@ -12,6 +12,28 @@ builder.Services.AddDbContext<StoreDbContext>(
     options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<StoreDbContext>();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Stel voor op examen vraagt errorlist;
+    // - 5 chars
+    // no capital
+    // no alpha-numeric
+    // number is required
+    
+    
+    //dan zoals onder
+
+
+    //password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;   
+    options.Password.RequiredLength = 5;
+});
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,6 +49,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
